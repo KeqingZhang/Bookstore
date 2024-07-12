@@ -1,0 +1,13 @@
+/* Login.css */
+.fade-appear,
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-appear-active,
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 1000ms ease-in;
+}
+
+/* 可选：为加载图标和文本添加额外的样式 */
