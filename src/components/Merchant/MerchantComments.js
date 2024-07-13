@@ -11,6 +11,8 @@ import {
   Tab,
 } from "@mui/material";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const MerchantComments = () => {
   const [allComments, setAllComments] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0); // 未读评论数量
@@ -23,7 +25,7 @@ const MerchantComments = () => {
   const fetchComments = async () => {
     try {
       const response = await axios.get(
-        `http://101.201.67.182:5000/merchant_comments`
+        `${BOOKSTORE_BACKEND_URL}/merchant_comments`
       );
       if (response.data) {
         const comments = response.data;
@@ -38,7 +40,7 @@ const MerchantComments = () => {
 
   const markAsRead = async (commentId) => {
     try {
-      await axios.post(`http://101.201.67.182:5000/merchant_comments/read`, {
+      await axios.post(`${BOOKSTORE_BACKEND_URL}/merchant_comments/read`, {
         comment_id: commentId,
       });
       fetchComments();

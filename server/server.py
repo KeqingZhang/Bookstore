@@ -435,7 +435,7 @@ def update_user_info():
     cursor = db.cursor()
     cursor.execute('''
         UPDATE Customer
-        SET username = ?, nickname = ?, email = ?, default_address = ?, reading_preference = ?, birthday = ?
+        SET customer_id = ?, nickname = ?, email = ?, default_address = ?, reading_preference = ?, birthday = ?
         WHERE id = ?
     ''', (data['username'], data['subusername'], data['email'], data['address'], data['bookPreferences'], data['birthday'], user_id))
     db.commit()
@@ -463,9 +463,8 @@ def update_merchant_password():
 
     store_id = user_data.get('user_id')
     data = request.get_json()
-    print(data)
+
     store_password = data.get('store_password')
-    print(store_password)
 
     if not store_password:
         return jsonify({'message': '缺少新密码'}), 400
@@ -526,11 +525,9 @@ def adjust_quantity():
         user_data = read_user_data()
         username = user_data.get('user_id')
         data = request.get_json()
-        print(data)
         
         book_id = data['book']['book_id']
         new_quantity = data['quantity']
-        print(new_quantity)
 
         # 连接到SQLite数据库
         conn = sqlite3.connect('database.db')
@@ -649,7 +646,7 @@ def remove_from_cart():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-    print(book)
+
     try:
         cursor.execute('DELETE FROM shoppingcart WHERE username = ? AND book_id = ?', (username, book['id']))
         conn.commit()
@@ -657,8 +654,6 @@ def remove_from_cart():
         # 查询当前用户购物车中的所有记录
         cursor.execute('SELECT * FROM shoppingcart WHERE username = ?', (username,))
         cart_items = cursor.fetchall()
-        for item in cart_items:
-            print(dict(item))
         cart_items_json = [
             {
                 'username': dict(item)['username'],
@@ -1003,8 +998,6 @@ def get_unread_comments_count():
         with open('user_data.json', 'r') as f:
             data = json.load(f)
         user_id = data.get('user_id')
-        # print(data)
-        print(user_id)
         
         if not user_id:
             return jsonify({'error': 'User ID is required'}), 400
@@ -1017,7 +1010,6 @@ def get_unread_comments_count():
             # 查询未读评论的数量
             cursor.execute("SELECT COUNT(*) FROM CommitCustomer WHERE customer_id=? AND is_read=0", (user_id,))
             unread_count = cursor.fetchone()  # 获取查询结果的第一个值
-            print(unread_count)
 
             # 返回未读评论数量
             return jsonify({'count': unread_count})
@@ -1097,7 +1089,6 @@ def search_books():
         cursor = db.cursor()
         cursor.execute('SELECT * FROM books WHERE category LIKE ?', ('%' + category + '%',))
         books = cursor.fetchall()  # 获取所有结果
-        print(books)
         db.close()
         formatted_books = [{
             'id': book[0],
@@ -1450,7 +1441,7 @@ def get_merchant_orders():
             data = json.load(f)
         store_id = data.get('store_id')
         status = request.args.get('status')
-        print("store_id, status:", store_id, status)
+
         if status and status != "全部":
             cursor.execute(
                 'SELECT * FROM orders WHERE merchant_name = ? AND transaction_status = ? ORDER BY transaction_date ASC', 
@@ -1462,7 +1453,7 @@ def get_merchant_orders():
                 (store_id,)
             )
         orders = cursor.fetchall()
-        print("orders:", orders)
+
         return jsonify([{
             'order_id': order[0],
             'merchant_name': order[1],
@@ -1484,7 +1475,7 @@ def get_merchant_orders():
 def update_order_status():
     new_status = request.json.get('transaction_status')
     orderId = request.json.get('orderId')
-    print(new_status, orderId)
+
     try:
         cursor.execute(
             'UPDATE orders SET transaction_status = ? WHERE order_id = ?',
@@ -1504,7 +1495,7 @@ def get_customer_orders():
         
         if not user_id:
             return jsonify({'error': '用户未登录'}), 400
-        print(type(request.args), request.args)
+
         book_name = request.args.get('book_name')
         merchant_name = request.args.get('merchant_name')
         start_date = request.args.get('start_date')
@@ -1540,7 +1531,6 @@ def get_customer_orders():
         orders = []
         for item in _orders:
             orders.append(dict(item))
-        print(orders)
 
         # cursor.execute('SELECT merchant_id FROM Merchant WHERE id = ?', (row[1],))
         #     merchant_name = cursor.fetchall()
@@ -1561,6 +1551,71 @@ def get_customer_orders():
     except Exception as e:
         print(e)
         return jsonify({'error': f'Error querying orders: {e}'}), 500
+
+@app.route('/get-book-comments', methods=['GET'])
+def get_book_comments():
+    book_id = request.args.get('book_id')
+    # print("book_id:", book_id)
+    conn = get_db_connection()
+    comments = conn.execute('SELECT * FROM comments WHERE book_id = ?', (book_id,)).fetchall()
+    # conn.close()
+    
+    # for comment in comments:
+    #     print(dict(comment)['customer_id'])
+    #     custom_id = dict(comment)['customer_id']
+    #     customer_name = conn.execute('SELECT * FROM Customer WHERE customer_id = ?', (custom_id,)).fetchall()
+    #     print(customer_name)
+    
+    conn.close()
+    return jsonify([dict(comment) for comment in comments])
+
+# @app.route('/get-book-comments', methods=['GET'])
+# def get_book_comments():
+#     book_id = request.args.get('book_id')
+#     print("book_id:", book_id)
+#     conn = get_db_connection()
+    
+#     # 使用 JOIN 操作将 comments 表和 Customer 表结合
+#     comments = conn.execute('''
+#         SELECT comments.*, Customer.nickname as customer_name 
+#         FROM comments 
+#         JOIN Customer ON CAST(comments.customer_id as TEXT) = Customer.customer_id 
+#         WHERE comments.book_id = ?
+#     ''', (book_id,)).fetchall()
+    
+#     conn.close()
+    
+#     # 打印查询结果以调试
+#     for comment in comments:
+#         print(dict(comment))
+    
+#     # 包含 customer_name 的评论数据返回给前端
+#     return jsonify([dict(comment) for comment in comments])
+
+
+@app.route('/add-book-comments', methods=['POST'])
+def add_book_comment():
+    data = request.get_json()
+    book_id = data['book_id']
+    context = data['context']
+    date = datetime.utcnow().strftime('%Y-%m-%d')
+    like_num = 0
+    conn = get_db_connection()
+    conn.execute('INSERT INTO comments (customer_id, book_id, context, date, like_num) VALUES (?, ?, ?, ?, ?)',
+                 (1, book_id, context, date, like_num))  # 1 should be replaced with the actual customer ID
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'Comment added successfully'})
+
+@app.route('/like-book-comment', methods=['POST'])
+def like_comment():
+    data = request.get_json()
+    comment_id = data['comment_id']
+    conn = get_db_connection()
+    conn.execute('UPDATE comments SET like_num = like_num + 1 WHERE comment_id = ?', (comment_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({'message': 'Comment liked successfully'})
 
 if __name__ == '__main__':
     # app.run(debug=True, port=5000)

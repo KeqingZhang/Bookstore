@@ -20,6 +20,8 @@ import { Box, Drawer, ListItem, Badge } from "@mui/material";
 import axios from "axios";
 import "./CustomerDashboard.css"; // Import CSS file for custom styles
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 // 新建一个函数组件来获取未读评论数量并显示Badge
 const CommentIconWithBadge = () => {
   const [unreadCount, setUnreadCount] = React.useState(0);
@@ -28,7 +30,7 @@ const CommentIconWithBadge = () => {
     const fetchUnreadCount = async () => {
       try {
         const response = await axios.get(
-          "http://101.201.67.182:5000/comments/unread/count"
+          `${BOOKSTORE_BACKEND_URL}/comments/unread/count`
         );
         if (response.data) {
           setUnreadCount(response.data.count);
@@ -71,7 +73,7 @@ export default function CustomerDashboard() {
   const handleLogout = async () => {
     try {
       // 清空后端的 user_data.json 文件
-      await axios.post("http://101.201.67.182:5000/customer-logout");
+      await axios.post(`${BOOKSTORE_BACKEND_URL}/customer-logout`);
       // 清空本地存储
       localStorage.clear();
       // 重定向到主页

@@ -12,6 +12,8 @@ import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 import Modal from "@mui/material/Modal";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const BookList = ({ storeId }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ const BookList = ({ storeId }) => {
     const fetchBooks = async () => {
       try {
         const response = await axios.get(
-          `http://101.201.67.182:5000/merchant-books`
+          `${BOOKSTORE_BACKEND_URL}/merchant-books`
         );
         setBooks(response.data);
         setLoading(false);
@@ -37,7 +39,7 @@ const BookList = ({ storeId }) => {
 
   const handleRemoveFromShelf = async (bookId) => {
     try {
-      await axios.delete(`http://101.201.67.182:5000/books_remove/${bookId}`);
+      await axios.delete(`${BOOKSTORE_BACKEND_URL}/books_remove/${bookId}`);
       const updatedBooks = books.filter((book) => book.book_id !== bookId);
       setBooks(updatedBooks);
     } catch (error) {
@@ -66,7 +68,7 @@ const BookList = ({ storeId }) => {
 
     console.log(bookId, newPrice);
     try {
-      await axios.patch(`http://101.201.67.182:5000/books_price/${bookId}`, {
+      await axios.patch(`${BOOKSTORE_BACKEND_URL}/books_price/${bookId}`, {
         price: newPrice,
       });
       window.location.reload();

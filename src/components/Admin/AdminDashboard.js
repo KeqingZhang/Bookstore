@@ -16,6 +16,8 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Drawer } from "@mui/material";
 import "./AdminDashboard.css"; // Import CSS file for custom styles
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const navItems = [
   { to: "orders", text: "查看订单", icon: <AssignmentIcon /> },
   { to: "stores", text: "查看商店", icon: <StoreIcon /> },
@@ -28,7 +30,7 @@ export default function AdminDashboard() {
 
   const handleLogout = () => {
     // 清除后台的用户数据
-    fetch("http://101.201.67.182:5000/logout", {
+    fetch(`${BOOKSTORE_BACKEND_URL}/logout`, {
       method: "POST",
       credentials: "include",
     })

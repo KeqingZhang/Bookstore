@@ -19,6 +19,8 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const useStyles = styled((theme) => ({
   root: {
     flexGrow: 1,
@@ -66,7 +68,7 @@ const OrderList = ({ storeId }) => {
     const fetchOrders = async () => {
       setLoading(true);
       try {
-        let url = `http://101.201.67.182:5000/merchant/orders`;
+        let url = `${BOOKSTORE_BACKEND_URL}/merchant/orders`;
         if (selectedStatus !== "全部") {
           url += `?status=${selectedStatus}`;
         }
@@ -94,7 +96,7 @@ const OrderList = ({ storeId }) => {
   const handleStatusUpdate = async (orderId) => {
     try {
       const newStatus = statuses[orderId];
-      await axios.patch(`http://101.201.67.182:5000/orders`, {
+      await axios.patch(`${BOOKSTORE_BACKEND_URL}/orders`, {
         transaction_status: newStatus,
         orderId: orderId,
       });

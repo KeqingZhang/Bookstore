@@ -18,6 +18,8 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const darkTheme = createTheme({ palette: { mode: "dark" } });
 const lightTheme = createTheme({ palette: { mode: "light" } });
 
@@ -119,23 +121,22 @@ const CouponModal = ({ coupons, open, onClose }) => {
 
 const CouponDisplay = () => {
   const [coupons, setCoupons] = useState({});
-  const [username, setUsername] = useState("");
+  const [username] = useState(""); // 删除 setUsername 以消除警告
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredCoupons, setFilteredCoupons] = useState({});
   const [selectedCoupons, setSelectedCoupons] = useState(null);
 
   useEffect(() => {
     axios
-      .get(`http://101.201.67.182:5000/coupons`)
+      .get(`${BOOKSTORE_BACKEND_URL}/coupons`)
       .then((response) => {
         setCoupons(response.data);
         setFilteredCoupons(response.data);
-        console.log(filteredCoupons);
       })
       .catch((error) => {
         console.error("Error fetching coupons:", error);
       });
-  }, []);
+  }, []); // Empty dependency array, meaning this effect runs only once on mount
 
   const handleSearch = () => {
     if (searchQuery.trim() === "") {

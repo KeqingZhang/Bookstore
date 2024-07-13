@@ -18,6 +18,8 @@ import { CSSTransition } from "react-transition-group";
 import "./Login.css";
 import LoadingScreen from "./LoadingScreen"; // 引入新的加载组件
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const Login = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [username, setUsername] = useState("");
@@ -37,11 +39,11 @@ const Login = () => {
       let loginEndpoint = "";
       // 根据用户类型选择不同的登录终点
       if (selectedTab === 0) {
-        loginEndpoint = "http://101.201.67.182:5000/customer-login";
+        loginEndpoint = `${BOOKSTORE_BACKEND_URL}/customer-login`;
       } else if (selectedTab === 1) {
-        loginEndpoint = "http://101.201.67.182:5000/admin-login";
+        loginEndpoint = `${BOOKSTORE_BACKEND_URL}/admin-login`;
       } else if (selectedTab === 2) {
-        loginEndpoint = "http://101.201.67.182:5000/merchant-login";
+        loginEndpoint = `${BOOKSTORE_BACKEND_URL}/merchant-login`;
       } else {
         console.error("未知用户类型");
         return;

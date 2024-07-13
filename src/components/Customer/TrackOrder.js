@@ -14,6 +14,8 @@ import {
   Button,
 } from "@mui/material";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const Orders = ({ userId }) => {
   const [orders, setOrders] = useState([]);
   const [selectedTab, setSelectedTab] = useState(0);
@@ -35,7 +37,7 @@ const Orders = ({ userId }) => {
   const fetchOrders = async (status = "全部") => {
     try {
       const response = await axios.get(
-        `http://101.201.67.182:5000/customer/orders`,
+        `${BOOKSTORE_BACKEND_URL}/customer/orders`,
         {
           params: {
             user_id: userId,

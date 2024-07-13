@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const AdminAccountSettings = () => {
   // const [accountId] = useState(""); // 示例账户ID，你可以根据需要修改获取
   const [adminNickname, setAdminNickname] = useState("");
@@ -29,7 +31,7 @@ const AdminAccountSettings = () => {
 
   const fetchAdminInfo = async () => {
     try {
-      const response = await axios.get("http://101.201.67.182:5000/admin/info");
+      const response = await axios.get(`${BOOKSTORE_BACKEND_URL}/admin/info`);
       const adminInfo = response.data; // 假设返回的数据格式包含了管理员的所有信息
       setAdminNickname(adminInfo.admin_nickname);
       setEmail(adminInfo.email);
@@ -50,7 +52,7 @@ const AdminAccountSettings = () => {
     try {
       const updateData = { password };
       const response = await axios.post(
-        "http://101.201.67.182:5000/admin/update_password",
+        `${BOOKSTORE_BACKEND_URL}/admin/update_password`,
         updateData
       );
       console.log(response);
@@ -75,7 +77,7 @@ const AdminAccountSettings = () => {
         position,
       };
       const response = await axios.post(
-        "http://101.201.67.182:5000/admin/update",
+        `${BOOKSTORE_BACKEND_URL}/admin/update`,
         updateData
       );
       console.log(response);

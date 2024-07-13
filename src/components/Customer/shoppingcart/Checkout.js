@@ -19,6 +19,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const Checkout = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -34,7 +36,7 @@ const Checkout = () => {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch("http://101.201.67.182:5000/apply-discount");
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/apply-discount`);
       if (!response.ok) {
         throw new Error("获取购物车数据失败");
       }
@@ -48,7 +50,7 @@ const Checkout = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch("http://101.201.67.182:5000/get-user-info");
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/get-user-info`);
       if (!response.ok) {
         throw new Error("获取用户信息失败");
       }
@@ -73,7 +75,7 @@ const Checkout = () => {
     try {
       const cart = [...discountedItems, ...nonDiscountedItems];
       console.log(cart);
-      const response = await fetch("http://101.201.67.182:5000/checkout", {
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

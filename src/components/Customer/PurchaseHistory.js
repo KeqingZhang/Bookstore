@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   TextField,
@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const PurchaseHistory = () => {
   const [filteredHistory, setFilteredHistory] = useState([]);
   const [bookName, setBookName] = useState("");
@@ -17,14 +19,10 @@ const PurchaseHistory = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       const response = await axios.get(
-        "http://101.201.67.182:5000/customer/orders",
+        `${BOOKSTORE_BACKEND_URL}/customer/orders`,
         {
           params: {
             book_name: bookName,
@@ -38,7 +36,11 @@ const PurchaseHistory = () => {
     } catch (error) {
       console.error("获取订单数据出错:", error);
     }
-  };
+  }, [bookName, merchantName, startDate, endDate]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   return (
     <Container component="main" maxWidth="md">
@@ -84,7 +86,15 @@ const PurchaseHistory = () => {
             sx={{ mr: 2 }}
             InputLabelProps={{ shrink: true }}
           />
-
+          <TextField
+            label="结束日期"
+            variant="outlined"
+            type="date"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            sx={{ mr: 2 }}
+            InputLabelProps={{ shrink: true }}
+          />
           <Button variant="contained" color="primary" onClick={fetchOrders}>
             搜索
           </Button>

@@ -9,6 +9,8 @@ import {
   Divider,
 } from "@mui/material";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const BookDetail = ({ book, addToCart }) => {
   const {
     imageUrl,

@@ -22,6 +22,8 @@ import { Drawer } from "@mui/material";
 import axios from "axios";
 import "./MerchantDashboard.css"; // Import CSS file for custom styles
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const navItems = [
   { to: "add-book", text: "添加商家书籍", icon: <InboxIcon /> },
   { to: "product-management", text: "商品管理", icon: <InboxIcon /> },
@@ -43,7 +45,7 @@ export default function MerchantDashboard() {
   const handleLogout = async () => {
     try {
       // 清空后端的 user_data.json 文件
-      await axios.post("http://101.201.67.182:5000/logout");
+      await axios.post(`${BOOKSTORE_BACKEND_URL}/logout`);
       // 清空本地存储
       localStorage.clear();
       // 重定向到主页

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Grid } from "@mui/material";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const AddBook = () => {
   const [bookName, setBookName] = useState("");
   const [price, setPrice] = useState("");
@@ -26,7 +28,7 @@ const AddBook = () => {
 
     try {
       const response = await axios.post(
-        "http://101.201.67.182:5000/add-book",
+        `${BOOKSTORE_BACKEND_URL}/add-book`,
         formData,
         {
           headers: {

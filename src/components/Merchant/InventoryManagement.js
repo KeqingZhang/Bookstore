@@ -9,6 +9,8 @@ import Button from "@mui/material/Button";
 import { styled } from "@mui/system";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const Container = styled(Box)({
   display: "flex",
   justifyContent: "center",
@@ -32,7 +34,7 @@ const InventoryManagement = ({ storeId }) => {
   const fetchBooks = async () => {
     try {
       const response = await axios.get(
-        `http://101.201.67.182:5000/merchant-books`
+        `${BOOKSTORE_BACKEND_URL}/merchant-books`
       );
       setBooks(response.data);
       setLoading(false);
@@ -56,7 +58,7 @@ const InventoryManagement = ({ storeId }) => {
   const handleInventoryUpdate = async (bookId) => {
     try {
       const newInventory = newInventories[bookId];
-      await axios.patch(`http://101.201.67.182:5000/books_invent`, {
+      await axios.patch(`${BOOKSTORE_BACKEND_URL}/books_invent`, {
         inventory: newInventory,
         bookId: bookId,
       });

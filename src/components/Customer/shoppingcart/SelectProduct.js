@@ -22,6 +22,8 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import BookDetail from "./BookDetail"; // 确保你已经导入了BookDetail组件
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const SelectProduct = () => {
   const navigate = useNavigate();
   const [books, setBooks] = useState([]);
@@ -62,9 +64,8 @@ const SelectProduct = () => {
 
   const fetchBooks = async () => {
     try {
-      const ngrokUrl = "http://101.201.67.182:5000/customer-get-books"; // 替换为你实际的Ngrok URL
+      const ngrokUrl = `${BOOKSTORE_BACKEND_URL}/customer-get-books`; // 替换为你实际的Ngrok URL
       const response = await axios.get(ngrokUrl);
-      console.log("response", response);
       if (response.status !== 200) {
         throw new Error("获取书本数据失败");
       }
@@ -77,34 +78,9 @@ const SelectProduct = () => {
     }
   };
 
-  // const fetchBooks = async () => {
-  //   try {
-  //     // const response1 = await fetch(
-  //     //   "http://101.201.67.182:5000/test",
-  //     //   {
-  //     //     method: "get",
-  //     //   }
-  //     // );
-  //     // console.log(response1);
-  //     let customergetbooksurl =
-  //       "http://101.201.67.182:5000/customer-get-books";
-  //     const response = await fetch(customergetbooksurl, {
-  //       method: "get",
-  //     });
-  //     console.log("response", response);
-  //     if (!response.ok) {
-  //       throw new Error("获取书本数据失败");
-  //     }
-  //     const data = await response.json();
-  //     setBooks(data.books);
-  //   } catch (error) {
-  //     console.error("获取书本数据出错:", error);
-  //   }
-  // };
-
   const fetchCart = async () => {
     try {
-      const response = await fetch("http://101.201.67.182:5000/get-cart");
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/get-cart`);
       if (!response.ok) {
         throw new Error("获取购物车数据失败");
       }
@@ -125,7 +101,7 @@ const SelectProduct = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await fetch("http://101.201.67.182:5000/coupons");
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/coupons`);
       if (!response.ok) {
         throw new Error("获取优惠券数据失败");
       }
@@ -147,7 +123,7 @@ const SelectProduct = () => {
 
     try {
       const disprice = calculateDiscountedPrice(book).toFixed(2);
-      const response = await fetch("http://101.201.67.182:5000/add-to-cart", {
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/add-to-cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -186,7 +162,7 @@ const SelectProduct = () => {
   const removeFromCart = async (book) => {
     try {
       const response = await fetch(
-        "http://101.201.67.182:5000/remove-from-cart",
+        `${BOOKSTORE_BACKEND_URL}/remove-from-cart`,
         {
           method: "POST",
           headers: {
@@ -273,7 +249,7 @@ const SelectProduct = () => {
   const handleSearchClick = async () => {
     try {
       const response = await fetch(
-        `http://101.201.67.182:5000/search-books?category=${searchTerm}`
+        `${BOOKSTORE_BACKEND_URL}/search-books?category=${searchTerm}`
       );
       if (!response.ok) {
         throw new Error("搜索书本数据失败");

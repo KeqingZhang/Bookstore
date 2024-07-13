@@ -15,6 +15,8 @@ import {
 import RefreshIcon from "@mui/icons-material/Refresh";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const ModifyMerchantInfo = () => {
   const [storeId, setStoreId] = useState("");
   const [storeName, setStoreName] = useState("");
@@ -32,7 +34,7 @@ const ModifyMerchantInfo = () => {
   // Fetch merchant data from backend on component mount
   useEffect(() => {
     axios
-      .get("http://101.201.67.182:5000/get-current-merchant")
+      .get(`${BOOKSTORE_BACKEND_URL}/get-current-merchant`)
       .then((response) => {
         const merchantData = response.data;
         setStoreId(merchantData.store_id);
@@ -49,7 +51,7 @@ const ModifyMerchantInfo = () => {
 
   const handleRefresh = () => {
     axios
-      .get("http://101.201.67.182:5000/get-current-merchant")
+      .get(`${BOOKSTORE_BACKEND_URL}/get-current-merchant"`)
       .then((response) => {
         const merchantData = response.data;
         setStoreId(merchantData.store_id);
@@ -75,7 +77,7 @@ const ModifyMerchantInfo = () => {
     };
     axios
       .patch(
-        "http://101.201.67.182:5000/update-merchant-info",
+        `${BOOKSTORE_BACKEND_URL}/update-merchant-info`,
         updatedMerchantInfo
       )
       .then((response) => {
@@ -118,7 +120,7 @@ const ModifyMerchantInfo = () => {
     };
     axios
       .patch(
-        "http://101.201.67.182:5000/update-merchant-password",
+        `${BOOKSTORE_BACKEND_URL}/update-merchant-password`,
         updatedPassword
       )
       .then((response) => {

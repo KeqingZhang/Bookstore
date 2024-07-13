@@ -15,6 +15,8 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -38,21 +40,18 @@ export default function UserList() {
   const [users, setUsers] = useState([]);
   const [searchUsername, setSearchUsername] = useState("");
   const [warningContents, setWarningContents] = useState({});
-  const [currentPage, setCurrentPage] = useState(1); // 当前页数
+  const [currentPage] = useState(1); // 当前页数
   const [usersPerPage] = useState(20); // 每页显示的用户数
 
   const fetchUsers = useCallback(async () => {
     try {
-      const response = await axios.get(
-        "http://101.201.67.182:5000/admin/users",
-        {
-          params: {
-            user_name: searchUsername,
-            page: currentPage, // 添加参数以获取当前页数据
-            limit: usersPerPage, // 每页的用户数限制
-          },
-        }
-      );
+      const response = await axios.get(`${BOOKSTORE_BACKEND_URL}/admin/users`, {
+        params: {
+          user_name: searchUsername,
+          page: currentPage, // 添加参数以获取当前页数据
+          limit: usersPerPage, // 每页的用户数限制
+        },
+      });
       setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -65,7 +64,7 @@ export default function UserList() {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`http://101.201.67.182:5000/admin/users/${userId}`);
+      await axios.delete(`${BOOKSTORE_BACKEND_URL}/admin/users/${userId}`);
       fetchUsers();
     } catch (error) {
       console.error("Error deleting user:", error);
@@ -74,7 +73,7 @@ export default function UserList() {
 
   const handleWarnUser = async (userId) => {
     try {
-      await axios.post("http://101.201.67.182:5000/admin/warn_user", {
+      await axios.post(`${BOOKSTORE_BACKEND_URL}/admin/warn_user`, {
         user_id: userId,
         warning_content: warningContents[userId] || "",
       });

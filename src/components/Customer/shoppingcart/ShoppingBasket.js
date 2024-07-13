@@ -17,6 +17,8 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const ShoppingBasket = () => {
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
@@ -31,14 +33,14 @@ const ShoppingBasket = () => {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch("http://101.201.67.182:5000/get-cart");
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/get-cart`);
       const data = await response.json();
 
       // 获取每本书的优惠券信息
       const cartWithCoupons = await Promise.all(
         data.cart.map(async (book) => {
           const couponResponse = await fetch(
-            `http://101.201.67.182:5000/coupons`
+            `${BOOKSTORE_BACKEND_URL}/coupons`
           );
           const couponsData = await couponResponse.json();
           if (couponsData[book.merchant] != null) {
@@ -74,7 +76,7 @@ const ShoppingBasket = () => {
     // console.log("book", book);
     try {
       const response = await fetch(
-        "http://101.201.67.182:5000/remove-from-cart",
+        `${BOOKSTORE_BACKEND_URL}/remove-from-cart`,
         {
           method: "POST",
           headers: {
@@ -93,7 +95,7 @@ const ShoppingBasket = () => {
 
   const handleClearCart = async () => {
     try {
-      const response = await fetch("http://101.201.67.182:5000/clear-cart", {
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/clear-cart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,19 +115,16 @@ const ShoppingBasket = () => {
 
   const handleAdjustQuantity = async (book, newQuantity) => {
     try {
-      const response = await fetch(
-        "http://101.201.67.182:5000/adjust-quantity",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            book: book,
-            quantity: newQuantity,
-          }),
-        }
-      );
+      const response = await fetch(`${BOOKSTORE_BACKEND_URL}/adjust-quantity`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          book: book,
+          quantity: newQuantity,
+        }),
+      });
       const data = await response.json();
       setCart(data.cart);
       setSnackbarMessage("订单数量已成功修改");

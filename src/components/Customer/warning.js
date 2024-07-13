@@ -12,6 +12,8 @@ import {
 } from "@mui/material";
 // import { useNavigate } from "react-router-dom";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const Comments = () => {
   const [allComments, setAllComments] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0); // 未读评论数量
@@ -24,7 +26,7 @@ const Comments = () => {
 
   const fetchComments = async () => {
     try {
-      const response = await axios.get(`http://101.201.67.182:5000/comments`);
+      const response = await axios.get(`${BOOKSTORE_BACKEND_URL}/comments`);
       if (response.data) {
         const comments = response.data;
         const unread = comments.filter((comment) => !comment.state);
@@ -38,7 +40,7 @@ const Comments = () => {
 
   const markAsRead = async (commentId) => {
     try {
-      await axios.post(`http://101.201.67.182:5000/comments/read`, {
+      await axios.post(`${BOOKSTORE_BACKEND_URL}/comments/read`, {
         comment_id: commentId,
       });
       fetchComments();

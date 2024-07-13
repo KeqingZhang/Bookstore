@@ -12,6 +12,8 @@ import {
   Container,
 } from "@mui/material";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const Register = () => {
   const [userType, setUserType] = useState("customer");
   const [id, setId] = useState("");
@@ -69,7 +71,7 @@ const Register = () => {
       }
 
       const response = await axios.post(
-        `http://101.201.67.182:5000/${userType}-register`,
+        `${BOOKSTORE_BACKEND_URL}/${userType}-register`,
         postData
       );
 

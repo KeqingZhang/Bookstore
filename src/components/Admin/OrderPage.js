@@ -22,6 +22,8 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -51,7 +53,7 @@ const OrderList = () => {
   const fetchOrders = React.useCallback(async () => {
     try {
       const response = await axios.get(
-        "http://101.201.67.182:5000/admin/orders",
+        `${BOOKSTORE_BACKEND_URL}/admin/orders`,
         {
           params: {
             user_name: searchUser,
@@ -81,7 +83,7 @@ const OrderList = () => {
 
   const handleDeleteOrder = async (orderId) => {
     try {
-      await axios.delete(`http://101.201.67.182:5000/admin/orders/${orderId}`);
+      await axios.delete(`${BOOKSTORE_BACKEND_URL}/admin/orders/${orderId}`);
       fetchOrders();
     } catch (error) {
       console.error("Error deleting order:", error);

@@ -24,6 +24,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import WarningIcon from "@mui/icons-material/Warning";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -57,7 +59,7 @@ const StoreList = () => {
   const fetchStores = async () => {
     try {
       const response = await axios.get(
-        "http://101.201.67.182:5000/admin/stores",
+        `${BOOKSTORE_BACKEND_URL}/admin/stores`,
         {
           params: {
             store_name: searchStore,
@@ -73,7 +75,7 @@ const StoreList = () => {
   const handleDeleteStore = async (storeId) => {
     try {
       const response = await axios.delete(
-        `http://101.201.67.182:5000/admin/stores/${storeId}`
+        `${BOOKSTORE_BACKEND_URL}/admin/stores/${storeId}`
       );
       console.log(response.data.message); // 输出成功信息
       fetchStores(); // 删除成功后，刷新商店列表
@@ -91,7 +93,7 @@ const StoreList = () => {
     if (currentStore) {
       try {
         const response = await axios.post(
-          `http://101.201.67.182:5000/admin/warn_store`,
+          `${BOOKSTORE_BACKEND_URL}/admin/warn_store`,
           {
             store_id: currentStore.store_id,
             warning_content: warningContent,

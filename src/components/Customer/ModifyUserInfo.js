@@ -14,6 +14,8 @@ import {
 import RefreshIcon from "@mui/icons-material/Refresh";
 import axios from "axios";
 
+const BOOKSTORE_BACKEND_URL = process.env.REACT_APP_BOOKSTORE_BACKEND_URL;
+
 const ModifyUserInfo = () => {
   const [username, setUsername] = useState("");
   const [subusername, setSubusername] = useState("");
@@ -27,7 +29,7 @@ const ModifyUserInfo = () => {
 
   useEffect(() => {
     axios
-      .get("http://101.201.67.182:5000/get-current-user")
+      .get(`${BOOKSTORE_BACKEND_URL}/get-current-user`)
       .then((response) => {
         const userData = response.data;
         setUsername(userData.username);
@@ -44,7 +46,7 @@ const ModifyUserInfo = () => {
 
   const handleRefresh = () => {
     axios
-      .get("http://101.201.67.182:5000/get-current-user")
+      .get(`${BOOKSTORE_BACKEND_URL}/get-current-user`)
       .then((response) => {
         const userData = response.data;
         setUsername(userData.username);
@@ -70,7 +72,7 @@ const ModifyUserInfo = () => {
       birthday,
     };
     axios
-      .post("http://101.201.67.182:5000/update-user-info", updatedUserInfo)
+      .post(`${BOOKSTORE_BACKEND_URL}/update-user-info`, updatedUserInfo)
       .then((response) => {
         console.log("User info updated successfully:", response.data);
         setOpenDialog(true);
@@ -90,7 +92,7 @@ const ModifyUserInfo = () => {
       password,
     };
     axios
-      .post("http://101.201.67.182:5000/update-password", updatedPassword)
+      .post(`${BOOKSTORE_BACKEND_URL}/update-password`, updatedPassword)
       .then((response) => {
         console.log("Password updated successfully:", response.data);
         setOpenDialog(true);
